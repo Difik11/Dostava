@@ -1,0 +1,109 @@
+﻿<Window x:Class="dimon.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:dimon"
+        mc:Ignorable="d"
+       Title="Система заказа еды" Height="600" Width="900">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/handdrawn-seafood-flavor-restaurant-seaside-260nw-2646444345.jpg"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Text="Заказывай еду у нас в Dostava" 
+                   FontSize="20" FontWeight="Bold" 
+                   HorizontalAlignment="Center" Margin="10" Foreground="White"/>
+
+        <!-- Основной контент -->
+        <TabControl x:Name="MainTabControl" Grid.Row="1" Margin="10">
+            <!-- Вкладка меню -->
+            <TabItem Header="Меню">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Фильтры -->
+                    <StackPanel Grid.Column="0" Margin="5">
+                        <TextBlock Text="Фильтр по кухне:" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <CheckBox Content="Итальянская" IsChecked="True" Checked="CuisineFilter_Changed" Unchecked="CuisineFilter_Changed"/>
+                        <CheckBox Content="Японская" IsChecked="True" Checked="CuisineFilter_Changed" Unchecked="CuisineFilter_Changed"/>
+                        <CheckBox Content="Русская" IsChecked="True" Checked="CuisineFilter_Changed" Unchecked="CuisineFilter_Changed"/>
+                        <CheckBox Content="Американская" IsChecked="True" Checked="CuisineFilter_Changed" Unchecked="CuisineFilter_Changed"/>
+                    </StackPanel>
+
+                    <!-- Список блюд -->
+                    <ListView Grid.Column="1" Name="MenuItemsList" Margin="5">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Название" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="Ресторан" Width="150" DisplayMemberBinding="{Binding Restaurant}"/>
+                                <GridViewColumn Header="Кухня" Width="100" DisplayMemberBinding="{Binding Cuisine}"/>
+                                <GridViewColumn Header="Цена" Width="80" DisplayMemberBinding="{Binding Price, StringFormat={}{0}₽}"/>
+                                <GridViewColumn Header="Действие" Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="В корзину" Click="AddToCart_Click"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка корзины -->
+            <TabItem Header="Корзина">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Содержимое корзины -->
+                    <ListView Grid.Row="0" Name="CartItemsList" Margin="5">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Название" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="Цена" Width="100" DisplayMemberBinding="{Binding Price, StringFormat={}{0}₽}"/>
+                                <GridViewColumn Header="Количество" Width="100" DisplayMemberBinding="{Binding Quantity}"/>
+                                <GridViewColumn Header="Сумма" Width="100" DisplayMemberBinding="{Binding TotalPrice, StringFormat={}{0}₽}"/>
+                                <GridViewColumn Header="Действие" Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Удалить" Click="RemoveFromCart_Click"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <!-- Итого и кнопка заказа -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <TextBlock Name="TotalText" FontWeight="Bold" FontSize="14" 
+                                  VerticalAlignment="Center" Margin="0,0,20,0"/>
+                        <Button Content="Оформить заказ" Click="PlaceOrder_Click" 
+                               Padding="10,5" FontSize="14"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Статус бар -->
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock Name="StatusText" Text="Готов к работе"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
